@@ -13,7 +13,7 @@ jobs:
         with: 
           node-version: "16.x"
       - name: Install Node Dependencies
-        run: npm CI
+        run: npm ci
       - name: Check Code Fromat
         run: npm run format:check
       - name: Run Tests and get Code-Coverage
