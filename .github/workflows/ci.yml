@@ -2,6 +2,8 @@ name: CI
 on:
   pull_request:
     branches: [develop]
+  push:
+    branches: [develop]
 jobs:
   build:
     runs-on: ubuntu-latest
@@ -18,5 +20,15 @@ jobs:
         run: npm run format:check
       - name: Run Tests and get Code-Coverage
         run: npm test -- --coverage
+      - name: Build project
+        if: github.event_name == 'push'
+        run: npm run build
+      - name: Install Surge Globally
+        run: npm install -g surge
+      - name: Deploy to staging
+        if: github.event_name == 'push'
+        run: surge --project ./build --domain special-neck.surge.sh
         env:
           CI: true
+          SURGE_LOGIN: ${{ secrets.SURGE_LOGIN }}
+          SURGE_TOKEN: ${{ secrets.SURGE_TOKEN }}
