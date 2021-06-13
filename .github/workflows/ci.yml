@@ -24,6 +24,7 @@ jobs:
         if: github.event_name == 'push'
         run: npm run build
       - name: Install Surge Globally
+        if: github.event_name == 'push'
         run: npm install -g surge
       - name: Deploy to staging
         if: github.event_name == 'push'
