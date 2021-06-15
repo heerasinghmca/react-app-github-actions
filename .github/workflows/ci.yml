@@ -41,8 +41,8 @@ jobs:
         with:
           name: build
           path: build
-      - name: Download Artifact
-        uses: actions/download-artifact
+      # - name: Download Artifact
+      #   uses: actions/download-artifact
       - name: Install Surge Globally
         if: github.event_name == 'push'
         run: npm install -g surge
