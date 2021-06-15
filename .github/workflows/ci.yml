@@ -27,9 +27,22 @@ jobs:
         run: npm run format:check
       - name: Run Tests and get Code-Coverage
         run: npm test -- --coverage
+      - name: Upload Test-Coverage Results
+        uses: actions/upload-artifact@v1
+        with:
+          name: test-coverage
+          path: coverage
       - name: Build project
         if: github.event_name == 'push'
         run: npm run build
+      - name: Upload Build
+        if: github.event_name == 'push'
+        uses: actions/upload-artifact@v1
+        with:
+          name: build
+          path: build
+      - name: Download Artifact
+        uses: actions/download-artifact
       - name: Install Surge Globally
         if: github.event_name == 'push'
         run: npm install -g surge
