@@ -43,7 +43,7 @@ jobs:
           path: build
       - name: Create a Release
         if: github.event_name == 'push' && github.ref == 'refs/heads/master'
-        run: npx semantic-release 
+        run: npx semantic-release
       - name: Install Surge Globally
         if: github.event_name == 'push'
         run: npm install -g surge
