@@ -7,6 +7,10 @@ on:
 jobs:
   build:
     runs-on: ubuntu-latest
+    env:
+      CI: true
+      SURGE_LOGIN: ${{ secrets.SURGE_LOGIN }}
+      SURGE_TOKEN: ${{ secrets.SURGE_TOKEN }}
     steps:
       - name: Checkout Code
         uses: actions/checkout@v2
@@ -55,9 +59,8 @@ jobs:
         if: github.event_name == 'push'
         run: npm install -g surge
       - name: Deploy to staging
-        if: github.event_name == 'push'
+        if: github.event_name == 'push' && github.ref == 'refs/heads/develop'
         run: surge --project ./build --domain special-neck.surge.sh
-        env:
-          CI: true
-          SURGE_LOGIN: ${{ secrets.SURGE_LOGIN }}
-          SURGE_TOKEN: ${{ secrets.SURGE_TOKEN }}
+      - name: Deploy to production
+        if: github.event_name == 'push' && github.ref == 'refs/heads/master'
+        run: surge --project ./build --domain special-neck.surge.sh
