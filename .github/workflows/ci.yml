@@ -64,8 +64,13 @@ jobs:
       - name: Deploy to production
         if: github.event_name == 'push' && github.ref == 'refs/heads/master'
         run: surge --project ./build --domain special-neck.surge.sh
+      - name: master checkout
+        uses: actions/checkout@master
       - name: Upload coverage to codecov
         if: github.event_name == 'push' && github.ref == 'refs/heads/master'
-        run: npx codecov
-        env:
-          CODECOV_TOKEN: ${{ secrets.CODECOV_TOKEN }}
+        uses: codecov/codecov-action@v1
+        with:
+          token: ${{ secrets.CODECOV_TOKEN }}
+        # run: npx codecov
+        # env:
+        #   CODECOV_TOKEN: ${{ secrets.CODECOV_TOKEN }}
