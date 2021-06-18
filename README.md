@@ -1,3 +1,5 @@
+![GitHub repo size](https://img.shields.io/github/repo-size/heerasinghmca/react-app-github-actions?style=plastic) ![GitHub Workflow Status](https://img.shields.io/github/workflow/status/heerasinghmca/react-app-github-actions/CI)
+
 # Getting Started with Create React App
 
 This project was bootstrapped with [Create React App](https://github.com/facebook/create-react-app).
