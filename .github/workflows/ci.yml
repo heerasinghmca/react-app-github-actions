@@ -68,15 +68,6 @@ jobs:
         uses: actions/checkout@master
       - name: Upload coverage to codecov
         if: github.event_name == 'push' && github.ref == 'refs/heads/master'
-        # uses: codecov/codecov-action@v1
-        # with:
-        #   token: ${{ secrets.CODECOV_TOKEN }}
-        #   files: ./coverage1.xml,./coverage2.xml
-        #   directory: ./coverage/reports/
-        #   flags: unittests # optional
-        #   name: codecov-umbrella # optional
-        #   fail_ci_if_error: true # optional (default = false)
-        #   verbose: true # optional (default = false)
-        run: npx codecov
+        run: npx codecov --disable=gcov
         env:
           CODECOV_TOKEN: ${{ secrets.CODECOV_TOKEN }}
