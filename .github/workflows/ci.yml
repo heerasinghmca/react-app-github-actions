@@ -1,7 +1,7 @@
 name: CI-DEPLOYMENT
 on:
-  # pull_request:
-  #   branches: [develop, master]
+  pull_request:
+    branches: [develop, master]
   push:
     branches: [develop, master]
 
@@ -15,10 +15,12 @@ jobs:
     steps:
       - name: code-checkout
         uses: actions/checkout@v2
-      - name: setup nodejs
+
+      - name: nodejs-setup
         uses: actions/setup-node@v1
         with:
           node-version: "12.x"
+
       - name: cache node-modules
         uses: actions/cache@v1
         with:
@@ -26,63 +28,69 @@ jobs:
           key: ${{ runner.os }}-node-${{ hashFiles('**/package-lock.json') }}
           restore-keys: |
             ${{ runner.os }}-node-
-      - name: install node dependencies
+
+      - name: install node-dependencies
         run: npm ci
+
       - name: code fromat check
         run: npm run format:check
+
       - name: tests run and code-coverage report
         run: npm test -- --coverage
-        env:
-          CI: true
+
       - name: test-coverage results upload
         uses: actions/upload-artifact@v1
         with:
           name: code-coverage
           path: coverage
+
       - name: build project
         if: github.event_name == 'push'
         run: npm run build
+
       - name: upload build folder
         if: github.event_name == 'push'
         uses: actions/upload-artifact@v1
         with:
           name: build
           path: build
+
       - name: zip assets
         if: github.event_name == 'push' && github.ref == 'refs/heads/master'
         run: |
           zip -r build.zip ./build
           zip -r coverage.zip ./build
+
       - name: create a release
         if: github.event_name == 'push' && github.ref == 'refs/heads/master'
         run: npx semantic-release
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+
       - name: download code coverage artifact
         if: github.event_name == 'push'
         uses: actions/download-artifact@v2
         with:
           name: code-coverage
+
       - name: download build artifact
         if: github.event_name == 'push'
         uses: actions/download-artifact@v2
         with:
           name: build
+
       - name: install surge globally
         if: github.event_name == 'push'
         run: npm install -g surge
+
       - name: deploy to staging
         if: github.event_name == 'push' && github.ref == 'refs/heads/develop'
         run: npx surge --project ./build --domain special-neck.surge.sh
+
       - name: deploy to production
         if: github.event_name == 'push' && github.ref == 'refs/heads/master'
         run: surge --project ./build --domain special-neck.surge.sh
-      # - name: master checkout
-      #   uses: actions/checkout@master
-      - name: debug
-        run: |
-          ls -la
-          git branch
+
       - name: upload coverage to codecov
         if: github.event_name == 'push' && github.ref == 'refs/heads/master'
         run: npx codecov --disable=gcov
