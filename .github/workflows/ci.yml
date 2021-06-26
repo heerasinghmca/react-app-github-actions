@@ -62,7 +62,7 @@ jobs:
         if: github.event_name == 'push'
         uses: actions/download-artifact@v2
         with:
-          name: my-artifact
+          name: code-coverage
       - name: install surge globally
         if: github.event_name == 'push'
         run: npm install -g surge
