@@ -58,7 +58,8 @@ jobs:
         run: npx semantic-release
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-      - uses: actions/download-artifact
+      - name: download artifact
+        uses: actions/download-artifact
       - name: install surge globally
         if: github.event_name == 'push'
         run: npm install -g surge
