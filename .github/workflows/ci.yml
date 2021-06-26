@@ -77,8 +77,8 @@ jobs:
       - name: deploy to production
         if: github.event_name == 'push' && github.ref == 'refs/heads/master'
         run: surge --project ./build --domain special-neck.surge.sh
-      - name: master checkout
-        uses: actions/checkout@master
+      # - name: master checkout
+      #   uses: actions/checkout@master
       - name: debug
         run: |
           ls -la
