@@ -79,6 +79,10 @@ jobs:
         run: surge --project ./build --domain special-neck.surge.sh
       - name: master checkout
         uses: actions/checkout@master
+      - name: debug
+        run: |
+          ls -la
+          git branch
       - name: upload coverage to codecov
         if: github.event_name == 'push' && github.ref == 'refs/heads/master'
         run: npx codecov --disable=gcov
