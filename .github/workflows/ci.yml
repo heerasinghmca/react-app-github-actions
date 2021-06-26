@@ -1,9 +1,10 @@
-name: CI
+name: CI-DEPLOYMENT
 on:
   pull_request:
     branches: [develop, master]
   push:
     branches: [develop, master]
+
 jobs:
   build:
     runs-on: ubuntu-latest
@@ -12,61 +13,64 @@ jobs:
       SURGE_LOGIN: ${{ secrets.SURGE_LOGIN }}
       SURGE_TOKEN: ${{ secrets.SURGE_TOKEN }}
     steps:
-      - name: Checkout Code
+      - name: code-checkout
         uses: actions/checkout@v2
-      - name: Install NodeJS
+      - name: setup nodejs
         uses: actions/setup-node@v1
         with:
-          node-version: "16.x"
-      - name: Cache node modules
+          node-version: "12.x"
+      - name: cache node-modules
         uses: actions/cache@v1
         with:
           path: ~/.npm
           key: ${{ runner.os }}-node-${{ hashFiles('**/package-lock.json') }}
           restore-keys: |
             ${{ runner.os }}-node-
-      - name: Install Node Dependencies
+      - name: install node dependencies
         run: npm ci
-      - name: Check Code Fromat
+      - name: code fromat check
         run: npm run format:check
-      - name: Run Tests and get Code-Coverage
+      - name: tests run and code-coverage report
         run: npm test -- --coverage
-      - name: Upload Test-Coverage Results
+        env:
+          CI: true
+      - name: test-coverage results upload
         uses: actions/upload-artifact@v1
         with:
-          name: coverage
+          name: code-coverage
           path: coverage
-      - name: Build project
+      - name: build project
         if: github.event_name == 'push'
         run: npm run build
-      - name: Upload Build
+      - name: upload build folder
         if: github.event_name == 'push'
         uses: actions/upload-artifact@v1
         with:
           name: build
           path: build
-      - name: ZIP Assets
+      - name: zip assets
         if: github.event_name == 'push' && github.ref == 'refs/heads/master'
         run: |
           zip -r build.zip ./build
-          zip -r coverage.zip ./coverage
-      - name: Create a Release
+          zip -r coverage.zip ./build
+      - name: create a release
         if: github.event_name == 'push' && github.ref == 'refs/heads/master'
         run: npx semantic-release
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-      - name: Install Surge Globally
+      - uses: actions/download-artifact
+      - name: install surge globally
         if: github.event_name == 'push'
         run: npm install -g surge
-      - name: Deploy to staging
+      - name: deploy to staging
         if: github.event_name == 'push' && github.ref == 'refs/heads/develop'
-        run: surge --project ./build --domain special-neck.surge.sh
-      - name: Deploy to production
+        run: npx surge --project ./build --domain special-neck.surge.sh
+      - name: deploy to production
         if: github.event_name == 'push' && github.ref == 'refs/heads/master'
         run: surge --project ./build --domain special-neck.surge.sh
       - name: master checkout
         uses: actions/checkout@master
-      - name: Upload coverage to codecov
+      - name: upload coverage to codecov
         if: github.event_name == 'push' && github.ref == 'refs/heads/master'
         run: npx codecov --disable=gcov
         env:
