@@ -6,6 +6,6 @@ jobs:
   slack-notify:
     runs-on: ubuntu-latest
     steps:
-      - name: slack-message
+      - name: slack message
         run: |
           curl -X POST --data-urlencode 'payload={'channel': '#qa_channel_internal', 'username': 'githubactionbot', 'text': 'New release ${{ github.event.release.tag_name }} is out, <${{ github.event.release.html_url }}| check it out now.>', 'icon_emoji': ':ghost:'}' ${{ secrets.SLACK_WEBHOOK }}
