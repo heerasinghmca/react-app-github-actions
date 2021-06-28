@@ -1,4 +1,4 @@
-name: deployment flow
+name: deployment
 on:
   pull_request:
     branches: [develop, master]
