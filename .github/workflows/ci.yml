@@ -21,7 +21,7 @@ jobs:
         with:
           node-version: "12.x"
 
-      - name: cache node-modules
+      - name: caching node-modules
         uses: actions/cache@v1
         with:
           path: ~/.npm
@@ -32,13 +32,13 @@ jobs:
       - name: install node-dependencies
         run: npm ci
 
-      - name: code fromat check
+      - name: check code fromat
         run: npm run format:check
 
-      - name: tests run and code-coverage report
+      - name: generate code-coverage report for tests run
         run: npm test -- --coverage
 
-      - name: test-coverage results upload
+      - name: upload test-coverage results
         uses: actions/upload-artifact@v1
         with:
           name: code-coverage
