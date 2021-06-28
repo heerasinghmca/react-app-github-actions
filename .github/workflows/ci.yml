@@ -97,7 +97,7 @@ jobs:
         env:
           CODECOV_TOKEN: ${{ secrets.CODECOV_TOKEN }}
 
-      - name: open issue on failure
+      - name: open issue on failures
         if: failure() && github.event_name == 'pull_request'
         run: |
           curl --request POST \
