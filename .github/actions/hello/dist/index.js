@@ -1211,7 +1211,10 @@ module.exports = /******/ (function (modules, runtime) {
       const github = __webpack_require__(469);
 
       try {
-        throw new Error("some error message");
+        // throw new Error("some error message");
+        core.debug("Debug message");
+        core.warning("Warn message");
+        core.error("Error message");
         const name = core.getInput("who-to-greet");
         console.log(`Hello ${name}`);
 
