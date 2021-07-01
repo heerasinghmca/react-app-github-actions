@@ -6,5 +6,7 @@ jobs:
       - uses: actions/checkout@v2
       - uses: ./.github/actions/hello
         id: hello
+        with:
+          who-to-greet: 'Heera Singh'
       - run: |
           echo "Time: ${{ steps.hello.outputs.time }}"
