@@ -15,5 +15,6 @@ inputs:
 outputs:
   issue:
     description: "The Issue Object as a json String"
-runs: "node12"
-main: "dist/index.js"
+runs:
+  using: "node12"
+  main: "dist/index.js"
