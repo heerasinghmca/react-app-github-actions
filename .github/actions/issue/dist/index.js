@@ -10691,7 +10691,7 @@ module.exports = /******/ (function (modules, runtime) {
     /***/ 482: /***/ function (__unusedmodule, __unusedexports, __webpack_require__) {
       const core = __webpack_require__(470);
       const github = __webpack_require__(469);
-      const octokit = __webpack_require__(889);
+      const { octokit } = __webpack_require__(889);
 
       async function run() {
         try {
