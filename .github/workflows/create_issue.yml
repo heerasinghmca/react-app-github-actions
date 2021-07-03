@@ -8,8 +8,8 @@ jobs:
         id: issue
         with:
           token: ${{ secrets.SEMANTIC_RELEASE_TOKEN }}
-          title: Title
-          body: Body
+          title: "Automatedd issue for commit: ${{ github.sha }}"
+          body: "Thiss issue was automatically created by the GitHub Action workflow **${{ github.workflow }}**. \n\n The commit hash was: _${{ github.sha }}_."
           assignees: |
             heerasinghmca
             hspsinghmca07
