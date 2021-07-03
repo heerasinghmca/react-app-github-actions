@@ -8909,6 +8909,7 @@ module.exports = /******/ (function (modules, runtime) {
           core.setFailed(error.message);
         }
       }
+      run();
 
       /***/
     },
