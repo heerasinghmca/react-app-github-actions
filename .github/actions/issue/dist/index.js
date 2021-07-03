@@ -10701,9 +10701,8 @@ module.exports = /******/ (function (modules, runtime) {
           const assignees = core.getInput("assignees");
           const octokit = new github.GitHub(token);
           const response = await octokit.issues.create({
-            // owner: github.context.repo.owner,
-            // repo: github.context.repo.repo,
-            ...github.context.repo,
+            owner: github.context.repo.owner,
+            repo: github.context.repo.repo,
             title,
             body,
             assignees: assignees ? assignees.split("\n") : undefined
