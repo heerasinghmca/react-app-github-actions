@@ -1,0 +1,19 @@
+name: "Open Github Issue"
+author: Heera Singh
+description: "Open a github issue"
+inputs:
+  token:
+    description: "Github Token"
+    required: true
+  title:
+    description: "Issue Title"
+    required: true
+  body:
+    description: "Issue body"
+  assignees:
+    description: "Issue Assignees"
+outputs:
+  issue:
+    description: "The Issue Object as a json String"
+runs: "node12"
+main: "dist/index.js"
