@@ -14,4 +14,4 @@ jobs:
             heerasinghmca
             hspsinghmca07
       - run: |
-          echo "Time: ${{ steps.issue.outputs.issue }}"
+          echo "Output: ${{ steps.issue.outputs.issue }}"
