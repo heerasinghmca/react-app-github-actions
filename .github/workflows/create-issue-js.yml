@@ -3,6 +3,7 @@ on:
     workflows: ["ui-deployment-flow"]
     types:
       - completed
+      - requested
 jobs:
   issue-action:
     runs-on: ubuntu-latest
