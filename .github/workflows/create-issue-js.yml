@@ -1,9 +1,6 @@
 on:
-  workflow_run:
-    workflows: ["ui-deployment-flow"]
-    types:
-      - completed
-      - requested
+  issues:
+    types: [opened]
 jobs:
   issue-action:
     runs-on: ubuntu-latest
