@@ -1,4 +1,6 @@
-on: [push, pull_request]
+on:
+  workflow_run:
+  workflows: ["ui-deployment-flow"]
 jobs:
   issue-action:
     runs-on: ubuntu-latest
