@@ -4,7 +4,9 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v2
-      - uses: ./.github/actions/issue
+      - name: Call JS action issue
+        if: ${{ failure() }}
+        uses: ./.github/actions/issue
         id: issue
         with:
           if: failure()
