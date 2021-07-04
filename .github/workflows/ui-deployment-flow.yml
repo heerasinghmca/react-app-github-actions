@@ -1,4 +1,4 @@
-name: deployment
+name: ui-deployment-flow
 on:
   pull_request:
     branches: [develop, master]

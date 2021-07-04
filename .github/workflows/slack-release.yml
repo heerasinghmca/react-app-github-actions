@@ -1,4 +1,4 @@
-name: slack notification on release
+name: slack notify [release]
 on:
   release:
     types: [published]
