@@ -1,0 +1,13 @@
+on: push
+jobs:
+  hello-docker-action:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v2
+      - uses: ./.github/actions/docker-hello
+        id: hello
+        with:
+          who-to-greet: "Heera Singh"
+      - run: |
+          echo "Time: ${{ steps.hello.outputs.time }}"
+          echo $HELLO
