@@ -4,8 +4,9 @@ on:
     branches:
       - master
       - develop
+      - main
 jobs:
-  checkout-action:
+  checkout:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v2
