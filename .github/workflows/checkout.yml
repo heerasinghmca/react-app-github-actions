@@ -1,0 +1,8 @@
+on: push
+jobs:
+  checkout-action:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v2
+        with:
+          ref: develop
