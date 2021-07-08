@@ -1,0 +1,11 @@
+name: slack notify [issue]
+on:
+  issues:
+    types: [opened]
+jobs:
+  slack-message:
+    runs-on: ubuntu-latest
+    steps:
+      - name: slack message on issue
+        run: |
+          curl -X POST --data-urlencode 'payload={"icon_emoji": ":ghost:", "channel": "#qa_channel_internal", "username": "githubactionbot", "text": "New issue created: <${{ github.event.issue.html_url }}| ${{ github.event.issue.title }}>"}' ${{ secrets.SLACK_WEBHOOK }}

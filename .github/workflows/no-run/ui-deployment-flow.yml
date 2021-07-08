@@ -1,0 +1,111 @@
+name: ui-deployment-flow
+on:
+  pull_request:
+    branches: [develop, master]
+  push:
+    branches: [develop, master]
+
+jobs:
+  deployment:
+    runs-on: ubuntu-latest
+    env:
+      CI: true
+      SURGE_LOGIN: ${{ secrets.SURGE_LOGIN }}
+      SURGE_TOKEN: ${{ secrets.SURGE_TOKEN }}
+    steps:
+      - name: code-checkout
+        uses: actions/checkout@v2
+
+      - name: nodejs-setup
+        uses: actions/setup-node@v1
+        with:
+          node-version: "12.x"
+
+      - name: caching node-modules
+        uses: actions/cache@v1
+        with:
+          path: ~/.npm
+          key: ${{ runner.os }}-node-${{ hashFiles('**/package-lock.json') }}
+          restore-keys: |
+            ${{ runner.os }}-node-
+
+      - name: install node-dependencies
+        run: npm ci
+
+      - name: check code fromat
+        run: npm run format:check
+
+      - name: generate code-coverage report for tests run
+        run: npm test -- --coverage
+
+      - name: upload test-coverage results
+        uses: actions/upload-artifact@v1
+        with:
+          name: code-coverage
+          path: coverage
+
+      - name: build project
+        if: github.event_name == 'push'
+        run: npm run build
+
+      - name: upload build folder
+        if: github.event_name == 'push'
+        uses: actions/upload-artifact@v1
+        with:
+          name: build
+          path: build
+
+      - name: zip assets
+        if: github.event_name == 'push' && github.ref == 'refs/heads/master'
+        run: |
+          zip -r build.zip ./build
+          zip -r coverage.zip ./coverage
+
+      - name: create a release
+        if: github.event_name == 'push' && github.ref == 'refs/heads/master'
+        run: npx semantic-release
+        env:
+          GITHUB_TOKEN: ${{ secrets.SEMANTIC_RELEASE_TOKEN }}
+
+      - name: download code coverage artifact
+        if: github.event_name == 'push'
+        uses: actions/download-artifact@v2
+        with:
+          name: code-coverage
+
+      - name: download build artifact
+        if: github.event_name == 'push'
+        uses: actions/download-artifact@v2
+        with:
+          name: build
+
+      - name: install surge globally
+        if: github.event_name == 'push'
+        run: npm install -g surge
+
+      - name: deploy to staging
+        if: github.event_name == 'push' && github.ref == 'refs/heads/develop'
+        run: npx surge --project ./build --domain special-neck.surge.sh
+
+      - name: deploy to production
+        if: github.event_name == 'push' && github.ref == 'refs/heads/master'
+        run: surge --project ./build --domain special-neck.surge.sh
+
+      - name: upload coverage to codecov
+        if: github.event_name == 'push' && github.ref == 'refs/heads/master'
+        run: npx codecov --disable=gcov
+        env:
+          CODECOV_TOKEN: ${{ secrets.CODECOV_TOKEN }}
+
+      - name: open issue on failure
+        if: failure() && github.event_name == 'pull_request'
+        run: |
+          curl --request POST \
+          --url https://api.github.com/repos/${{ github.repository }}/issues \
+          --header 'authorization: Bearer ${{ secrets.SEMANTIC_RELEASE_TOKEN }}' \
+          --header 'content-type: application/json' \
+          --data '{
+            "title": "Automated issue for commit: ${{ github.sha }}",
+            "body": "This issue was automatically created by the GitHub Action workflow **${{ github.workflow }}**. \n\n The commit hash was: _${{ github.sha }}_.",
+            "assignees": ["${{ github.event.pull_request.user.login }}"]
+            }'

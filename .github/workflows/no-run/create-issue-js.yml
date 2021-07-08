@@ -1,0 +1,22 @@
+on:
+  issues:
+    types: [opened]
+jobs:
+  issue-action:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v2
+      - name: Call JS action issue
+        if: ${{ failure() }}
+        uses: ./.github/actions/issue
+        id: issue
+        with:
+          if: failure()
+          token: ${{ secrets.SEMANTIC_RELEASE_TOKEN }}
+          title: "Automatedd issue for commit: ${{ github.sha }}"
+          body: "Thiss issue was automatically created by the GitHub Action workflow **${{ github.workflow }}**. \n\n The commit hash was: _${{ github.sha }}_."
+          assignees: |
+            heerasinghmca
+            hspsinghmca07
+      - run: |
+          echo "Output: ${{ steps.issue.outputs.issue }}"

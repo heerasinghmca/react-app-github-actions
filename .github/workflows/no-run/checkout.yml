@@ -1,0 +1,27 @@
+name: checkout
+env:
+  WF_ENV: Available to all jobs
+on:
+  push:
+    branches:
+      - master
+      - develop
+      - main
+jobs:
+  checkout:
+    runs-on: ubuntu-latest
+    env:
+      JOB_ENV: Available to all steps
+    steps:
+      - name: checkout1
+        uses: actions/checkout@v2
+        with:
+          ref: develop
+
+      - name: checkout2
+        env:
+          STEP_ENV: Available to current step
+        run: |
+          echo "${WF_ENV}"
+          echo "${JOB_ENV}"
+          echo "${STEP_ENV}"
