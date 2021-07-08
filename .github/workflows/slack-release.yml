@@ -1,0 +1,11 @@
+name: slack notify [release]
+on:
+  release:
+    types: [published]
+jobs:
+  slack-notify:
+    runs-on: ubuntu-latest
+    steps:
+      - name: slack message on release
+        run: |
+          curl -X POST --data-urlencode 'payload={"icon_emoji": ":ghost:", "channel": "#qa_channel_internal", "username": "githubactionbot", "text": "New release ${{ github.event.release.tag_name }} is out, <${{ github.event.release.html_url }} | check it out here...>"}' ${{ secrets.SLACK_WEBHOOK }}
