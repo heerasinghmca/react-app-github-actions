@@ -9,6 +9,9 @@ inputs:
 outputs:
   time:
     description: "Greet time"
+branding:
+  icon: "thumbs-up"
+  color: "white"
 runs:
   using: "node12"
   main: "dist/index.js"
