@@ -65,7 +65,7 @@ jobs:
         if: github.event_name == 'push' && github.ref == 'refs/heads/master'
         run: npx semantic-release
         env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          GITHUB_TOKEN: ${{ secrets.SEMANTIC_RELEASE_TOKEN }}
 
       - name: download code coverage artifact
         if: github.event_name == 'push'
@@ -91,7 +91,7 @@ jobs:
         if: github.event_name == 'push' && github.ref == 'refs/heads/master'
         run: surge --project ./build --domain special-neck.surge.sh
 
-      - name: upload coverage to codecov
+      - name: upload coverage in codecov
         if: github.event_name == 'push' && github.ref == 'refs/heads/master'
         run: npx codecov --disable=gcov
         env:
